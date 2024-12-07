@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My diary</title>
+<style type="text/css">
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+body{
+width:100%;
+height:100dvh;
+display:grid;
+grid-template-columns:1fr;
+grid-template-rows:40px 1fr;
+justify-content:center;
+}
+
+.apphead{
+position:relative;
+button{
+ position:absolute;
+ right:10px;
+ height:35px;
+ background:none;
+ border:none;
+ font-size:25px;
+}
+
+h2{
+width:100%;
+text-align:center;
+border-bottom:1px solid black;
+padding:5px 0 0 0;
+margin-bottom:0;
+}
+}
+.newdiarypage{
+position:relative;
+width:100%;
+height:100%;
+
+button{
+width:55px;
+height:55px;
+position:absolute;
+bottom:40px;
+right:50px;
+font-size:20px;
+background:white;
+border-radius:50%;
+}
+}
+textarea{
+height:calc(100% - 10px);
+width:100%;
+outline:none;
+border:none;
+padding:0 5px 0 10px;
+
+
+}
+
+
+/*page 2*/
+.buttonlist{
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:10px;
+
+button{
+ width:200px;
+ height:50px;
+}
+}
+
+/*Login page style*/
+.accbody{
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height: 100%;
+    margin-top:-10px;
+    background-color: #f4f4f9;
+ 
+}
+.container {
+      width: 300px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    input {
+      width: 95%;
+      padding: 10px;
+      margin: 10px  0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .message {
+      margin-top: 10px;
+      text-align: center;
+      color: red;
+    }
+    }
+</style>
+</head>
+<body>
+<div class="apphead">
+<button onclick="home()">🏠</button>
+<h2>My Diary</h2>
+</div>
+<div class="appbody">
+
+</div>
+
+<script type="text/javascript">
+let diarylist={
+
+}
+let newdiarypage;
+//localStorage.setItem("user",JSON.stringify({name:"ali"}));
+let item=localStorage.getItem("user");
+item=JSON.parse(item);
+console.log(item);
+let appbody=document.querySelector(".appbody");
+home();
+  const currentDate = new Date();
+  const options = { weekday: "long", year: "numeric", month: "short", day: "numeric" };
+  const toptions={};
+  const formattedDate = currentDate.toLocaleDateString(undefined, options);
+  const formattime=`${currentDate.getHours()%12} : ${currentDate.getMinutes()} : ${currentDate.getSeconds()} : ${(currentDate.getHours()>=12)?"PM":"AM"}`;
+  console.log(formattime);
+  // Prefill the textarea with the date and day name
+  
+function home(){
+ appbody.innerHTML=`<div class="buttonlist">
+ <button onclick="">My diaries</button>
+ <button onclick="newdiary()">New Diary</button>
+ <button onclick="loginpage()">Login</button>
+ <button onclick="newuserpage()">New user</button>
+ </div>`;
+}
+
+function newdiary(){
+appbody.innerHTML=`<div class="newdiarypage" >
+<textarea id="diary"></textarea>
+<button class="submitdiary" onclick="diarysubmit()">📤</button>
+</div>`;
+// Prefill the textarea with the date and day name
+ const diaryTextarea = document.querySelector("#diary");
+ diaryTextarea.value = `Date: ${formattedDate}\n\n`; // Add the date and leave space for the user to write
+
+}
+
+function loginpage(){
+appbody.innerHTML=`<div class="accbody">
+<div class="container" id="loginPage">
+    <h2>Login</h2>
+    <input type="text" id="useremail" placeholder="Enter email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="handleLogin()">Login</button>
+    <p class="message" id="loginMessage"></p>
+  </div>
+</div>`;
+}
+
+function newuserpage(){
+appbody.innerHTML=`<div class="accbody"><div class="container" id="newAccountPage">
+    <h2>Create New Account</h2>
+           <input type="text" id="newEmail" placeholder="Email id">
+    <input type="text" id="newUsername" placeholder="New Username">
+    <input type="password" id="newPassword" placeholder="New Password">
+    <button onclick="handleCreateAccount()">Create Account</button>
+    <p class="message" id="createMessage"></p>
+  </div></div>`;
+}
+
+function handleLogin() {
+      const username = document.getElementById('useremail').value;
+      const password = document.getElementById('password').value;
+
+      // Simulated login credentials
+      const validUsername = "admin";
+      const validPassword = "12345";
+
+      // Check if login is successful
+      if (username === validUsername && password === validPassword) {
+        // Show New Account Page
+        setTimeout(()=>{
+          alert("login sucess");
+        },400)
+        home();
+      } else {
+        // Show error message
+        document.getElementById('loginMessage').textContent = "Invalid username or password.";
+        setTimeout(()=>{
+          let msg=confirm("Do you want to create a new user account.");
+          console.log(msg);
+          if(msg){
+           newuserpage();
+          }else{
+             //clear inputs
+             document.getElementById('useremail').value="";
+             document.getElementById('password').value="";
+             // clear error message
+             document.getElementById('loginMessage').textContent = "";
+          }
+        },500)
+        
+      }
+    }
+
+    function handleCreateAccount() {
+      const newUsername = document.getElementById('newUsername').value;
+      const newPassword = document.getElementById('newPassword').value;
+
+      if (newUsername && newPassword) {
+        document.getElementById('createMessage').textContent = "Account created successfully!";
+        document.getElementById('createMessage').style.color = "green";
+        setTimeout(()=>{
+          loginpage();
+        },1000)
+      } else {
+        document.getElementById('createMessage').textContent = "Please fill in all fields.";
+      }
+    }
+</script>
+</body>
+</html>
